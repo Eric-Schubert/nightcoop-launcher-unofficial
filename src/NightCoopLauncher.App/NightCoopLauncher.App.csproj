@@ -7,9 +7,11 @@
     <RootNamespace>NightCoopLauncher.App</RootNamespace>
     <Product>NightCoop Launcher</Product>
     <Description>Unofficial launcher and updater for the NightCoop mod.</Description>
+    <ApplicationIcon>Assets\launcher.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\launcher.ico" />
     <Resource Include="Fonts\*.ttf" />
     <!-- One dictionary per language; a new file here is picked up as a new language. -->
     <EmbeddedResource Include="Languages\*.json" LogicalName="Languages/%(Filename).json" />

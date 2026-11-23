@@ -4,6 +4,7 @@
         xmlns:l="clr-namespace:NightCoopLauncher.App.Localization"
         xmlns:views="clr-namespace:NightCoopLauncher.App.Views"
         Title="NightCoop Launcher"
+        Icon="Assets/launcher.ico"
         Width="1240" Height="820" MinWidth="1040" MinHeight="660"
         WindowStartupLocation="CenterScreen"
         Background="{StaticResource BackgroundBrush}"
@@ -41,10 +42,8 @@
       <Border Grid.ColumnSpan="2" BorderBrush="{StaticResource LineBrush}" BorderThickness="0,0,0,1">
         <Grid>
           <StackPanel Orientation="Horizontal" Margin="18,0,0,0">
-            <Border Width="24" Height="22" Background="{StaticResource AccentBrush}" VerticalAlignment="Center">
-              <TextBlock Text="NC" FontFamily="{StaticResource CondensedFont}" FontWeight="Bold" FontSize="12"
-                         Foreground="{StaticResource OnAccentBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
-            </Border>
+            <Image Source="Assets/launcher.ico" Width="24" Height="24" VerticalAlignment="Center"
+                   RenderOptions.BitmapScalingMode="HighQuality" />
             <TextBlock Margin="12,0,0,0" VerticalAlignment="Center" FontFamily="{StaticResource CondensedFont}"
                        FontWeight="Bold" FontSize="14" Text="{l:T shell.title}" />
           </StackPanel>

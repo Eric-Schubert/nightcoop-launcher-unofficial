@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/logo.png" alt="" width="96">
+</p>
+
 <h1 align="center">NightCoop Launcher</h1>
 
 <p align="center">
