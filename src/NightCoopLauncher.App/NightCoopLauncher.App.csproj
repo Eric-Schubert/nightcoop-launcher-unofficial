@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>NightCoopLauncher</AssemblyName>
+    <RootNamespace>NightCoopLauncher.App</RootNamespace>
+    <Product>NightCoop Launcher</Product>
+    <Description>Unofficial launcher and updater for the NightCoop mod.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="Fonts\*.ttf" />
+    <!-- One dictionary per language; a new file here is picked up as a new language. -->
+    <EmbeddedResource Include="Languages\*.json" LogicalName="Languages/%(Filename).json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NightCoopLauncher.Core\NightCoopLauncher.Core.csproj" />
+  </ItemGroup>
+
+</Project>

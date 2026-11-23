@@ -1,0 +1,133 @@
+<UserControl x:Class="NightCoopLauncher.App.Views.PlayPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:l="clr-namespace:NightCoopLauncher.App.Localization"
+             xmlns:controls="clr-namespace:NightCoopLauncher.App.Controls">
+  <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+    <StackPanel Margin="40,34,40,40">
+
+      <!-- Status at a glance -->
+      <WrapPanel>
+        <Border Style="{StaticResource KindBorder}" Tag="{Binding StatusKind}" Padding="14,8" Margin="0,0,10,10">
+          <StackPanel Orientation="Horizontal">
+            <Ellipse Width="7" Height="7" VerticalAlignment="Center"
+                     Fill="{Binding BorderBrush, RelativeSource={RelativeSource AncestorType=Border}}" />
+            <TextBlock Margin="10,0,0,0" FontFamily="{StaticResource CondensedFont}" FontWeight="Bold" FontSize="13"
+                       Style="{StaticResource KindText}" Tag="{Binding StatusKind}" Text="{Binding StatusText}" />
+          </StackPanel>
+        </Border>
+        <Border Style="{StaticResource Chip}">
+          <TextBlock Style="{StaticResource Mono}" Text="{Binding ModChip}" />
+        </Border>
+        <Border Style="{StaticResource Chip}">
+          <TextBlock Style="{StaticResource Mono}" Text="{Binding GameChip}" />
+        </Border>
+      </WrapPanel>
+
+      <!-- Hero -->
+      <Border Style="{StaticResource Card}" Margin="0,14,0,0" Padding="0">
+        <Border Background="{StaticResource GridBrush}" Padding="46,40,46,44">
+          <StackPanel>
+            <StackPanel Orientation="Horizontal">
+              <TextBlock FontFamily="{StaticResource DisplayFont}" FontSize="72" VerticalAlignment="Center" Text="Night" />
+              <Border Margin="4,0,0,0" Padding="16,2,18,6" Background="{StaticResource AccentBrush}">
+                <Border.Clip>
+                  <MultiBinding Converter="{x:Static controls:CutCornerClip.Instance}">
+                    <Binding Path="ActualWidth" RelativeSource="{RelativeSource Self}" />
+                    <Binding Path="ActualHeight" RelativeSource="{RelativeSource Self}" />
+                  </MultiBinding>
+                </Border.Clip>
+                <TextBlock FontFamily="{StaticResource DisplayFont}" FontSize="72" Foreground="{StaticResource OnAccentBrush}"
+                           Text="Coop" />
+              </Border>
+            </StackPanel>
+            <TextBlock Margin="0,18,0,0" MaxWidth="660" HorizontalAlignment="Left" FontSize="18" LineHeight="28"
+                       TextWrapping="Wrap" Foreground="{StaticResource MutedBrush}" Text="{l:T play.tagline}" />
+
+            <StackPanel Orientation="Horizontal" Margin="0,36,0,0">
+              <Button Style="{StaticResource PrimaryButton}" MinWidth="300" Height="72" FontSize="24"
+                      Command="{Binding PrimaryCommand}" IsDefault="True">
+                <StackPanel Orientation="Horizontal">
+                  <TextBlock Style="{StaticResource Icon}" FontSize="20" Text="{Binding PrimaryGlyph}" />
+                  <TextBlock Margin="16,0,0,0" VerticalAlignment="Center" Text="{Binding PrimaryText}" />
+                </StackPanel>
+              </Button>
+              <TextBlock Style="{StaticResource Muted}" Margin="26,0,0,0" MaxWidth="320" VerticalAlignment="Center"
+                         Text="{Binding Hint}" />
+            </StackPanel>
+
+            <StackPanel Margin="0,26,0,0" MaxWidth="640" HorizontalAlignment="Left" Width="640"
+                        Visibility="{Binding ShowProgress, Converter={StaticResource BoolToVisibility}}">
+              <TextBlock Style="{StaticResource Mono}" Text="{Binding ProgressText}" />
+              <ProgressBar Margin="0,9,0,0" Value="{Binding ProgressPercent, Mode=OneWay}" />
+            </StackPanel>
+          </StackPanel>
+        </Border>
+      </Border>
+
+      <!-- Update notice -->
+      <Border Margin="0,22,0,0" Padding="24,18" Background="{StaticResource AccentPanelBrush}"
+              BorderBrush="{StaticResource AccentBrush}" BorderThickness="1"
+              Visibility="{Binding ShowUpdateBanner, Converter={StaticResource BoolToVisibility}}">
+        <DockPanel>
+          <Button DockPanel.Dock="Right" Margin="24,0,0,0" VerticalAlignment="Center" Cursor="Hand"
+                  Command="{Binding ShowUpdatesCommand}">
+            <Button.Template>
+              <ControlTemplate TargetType="Button">
+                <StackPanel Orientation="Horizontal" Background="Transparent">
+                  <TextBlock FontFamily="{StaticResource CondensedFont}" FontWeight="Bold" FontSize="14"
+                             Foreground="{StaticResource AccentBrush}" Text="{l:T play.banner.details}" />
+                  <TextBlock Style="{StaticResource Icon}" Margin="10,0,0,0" FontSize="13"
+                             Foreground="{StaticResource AccentBrush}" Text="&#xE72A;" />
+                </StackPanel>
+              </ControlTemplate>
+            </Button.Template>
+          </Button>
+          <TextBlock DockPanel.Dock="Left" Style="{StaticResource Icon}" FontSize="20" Foreground="{StaticResource AccentBrush}"
+                     Text="&#xE896;" />
+          <StackPanel Margin="20,0,0,0">
+            <TextBlock FontSize="16" FontWeight="SemiBold" Text="{Binding BannerTitle}" />
+            <TextBlock Style="{StaticResource Muted}" Margin="0,3,0,0" Text="{l:T play.banner.text}" />
+          </StackPanel>
+        </DockPanel>
+      </Border>
+
+      <!-- Cards -->
+      <UniformGrid Columns="3" Margin="-11,22,-11,0">
+        <Border Style="{StaticResource Card}" Margin="11,0">
+          <StackPanel>
+            <TextBlock Style="{StaticResource MonoLabel}" Text="{l:T play.card.backup.label}" />
+            <TextBlock Style="{StaticResource Headline}" Margin="0,12,0,0" Text="{Binding LastBackupTitle}" />
+            <TextBlock Style="{StaticResource Muted}" Margin="0,8,0,0" Text="{Binding LastBackupDetail}" />
+            <Button Style="{StaticResource LinkButton}" Margin="0,14,0,0" Content="{l:T play.card.backup.link}"
+                    Command="{Binding ShowBackupsCommand}" />
+          </StackPanel>
+        </Border>
+
+        <Border Style="{StaticResource Card}" Margin="11,0">
+          <StackPanel>
+            <TextBlock Style="{StaticResource MonoLabel}" Text="{l:T play.card.install.label}" />
+            <TextBlock Margin="0,12,0,0" FontFamily="{StaticResource DisplayFont}" FontSize="24"
+                       Style="{StaticResource KindText}" Tag="{Binding HealthKind}" Text="{Binding HealthTitle}" />
+            <TextBlock Style="{StaticResource Muted}" Margin="0,8,0,0" Text="{Binding HealthDetail}" />
+            <StackPanel Orientation="Horizontal" Margin="0,14,0,0">
+              <Button Style="{StaticResource LinkButton}" Content="{l:T play.card.install.verify}"
+                      Command="{Binding VerifyCommand}" />
+              <Button Style="{StaticResource LinkButton}" Margin="20,0,0,0" Foreground="{StaticResource AccentBrush}"
+                      Content="{l:T play.card.install.repair}" Command="{Binding RepairCommand}"
+                      Visibility="{Binding CanRepair, Converter={StaticResource BoolToVisibility}}" />
+            </StackPanel>
+          </StackPanel>
+        </Border>
+
+        <Border Style="{StaticResource Card}" Margin="11,0">
+          <StackPanel>
+            <TextBlock Style="{StaticResource MonoLabel}" Text="{l:T play.card.protocol.label}" />
+            <TextBlock Style="{StaticResource Headline}" Margin="0,12,0,0" Text="{Binding ProtocolTitle}" />
+            <TextBlock Style="{StaticResource Muted}" Margin="0,8,0,0" Text="{l:T play.card.protocol.detail}" />
+          </StackPanel>
+        </Border>
+      </UniformGrid>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>
