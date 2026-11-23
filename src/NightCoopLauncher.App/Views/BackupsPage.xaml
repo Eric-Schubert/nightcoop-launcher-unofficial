@@ -72,6 +72,9 @@
               </ListBox.Template>
               <ListBox.ItemContainerStyle>
                 <Style TargetType="ListBoxItem">
+                  <!-- Without this the rows take the system's black text colour. -->
+                  <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+                  <Setter Property="FocusVisualStyle" Value="{x:Null}" />
                   <Setter Property="Cursor" Value="Hand" />
                   <Setter Property="Template">
                     <Setter.Value>

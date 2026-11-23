@@ -2,8 +2,16 @@ namespace NightCoopLauncher.Core;
 
 public static class AppPaths
 {
-    public static string DataDirectory { get; } = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "NightCoopLauncher");
+    /// <summary>
+    /// Names a folder to keep settings and backups in instead of the default one. It lets
+    /// a second launcher run next to the regular one without sharing its settings.
+    /// </summary>
+    public const string DataDirectoryVariable = "NIGHTCOOP_LAUNCHER_DATA";
+
+    public static string DataDirectory { get; } =
+        Environment.GetEnvironmentVariable(DataDirectoryVariable) is { Length: > 0 } custom
+            ? Path.GetFullPath(custom)
+            : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "NightCoopLauncher");
 
     public static string SettingsFile { get; } = Path.Combine(DataDirectory, "settings.json");
 

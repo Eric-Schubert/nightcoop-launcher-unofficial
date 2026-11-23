@@ -1,18 +1,37 @@
-# NightCoop Launcher (unofficial)
+<h1 align="center">NightCoop Launcher</h1>
 
-A small Windows launcher that keeps the [NightCoop](https://nightcoop.net) co-op mod for Cyberpunk 2077 up to date:
-it checks for a new build, installs it with one click, backs up your saves and starts the game.
+<p align="center">
+  <b>An unofficial launcher for the <a href="https://nightcoop.net">NightCoop</a> co-op mod for Cyberpunk 2077.</b><br>
+  One button to install or update the mod, back up your saves and start the game.
+</p>
+
+<p align="center">
+  <a href="../../releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/dominique-boerner/nightcoop-launcher-unofficial?color=fcee0a&labelColor=0a0a0b"></a>
+  <a href="../../releases"><img alt="Downloads" src="https://img.shields.io/github/downloads/dominique-boerner/nightcoop-launcher-unofficial/total?color=fcee0a&labelColor=0a0a0b"></a>
+  <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-fcee0a?labelColor=0a0a0b"></a>
+  <img alt="Platform: Windows" src="https://img.shields.io/badge/platform-Windows-fcee0a?labelColor=0a0a0b">
+</p>
+
+<p align="center">
+  <a href="../../releases/latest"><b>Download</b></a> ·
+  <a href="#what-it-does">Features</a> ·
+  <a href="#build">Build</a> ·
+  <a href="#add-a-language">Translate</a>
+</p>
+
+<p align="center">
+  <img src="docs/screenshots/play.png" alt="The Play page: the mod is up to date and ready to play" width="900">
+</p>
+
+> [!IMPORTANT]
+> This is a fan project. It is **not** made by, affiliated with or endorsed by the NightCoop team or CD PROJEKT RED.
+> The real project lives at **<https://nightcoop.net>**.
 
 ## Unofficial, and with full respect
 
-This is a fan project. It is **not** made by, affiliated with or endorsed by the NightCoop team or CD PROJEKT RED.
-
-NightCoop itself is the work of its developers, and all credit for the mod belongs to them. I have nothing but
-respect for what they have built. This launcher only downloads the builds they publish on their own site, exactly
-as their download page offers them, and changes nothing about the mod.
-
-- The real project: **<https://nightcoop.net>**
-- Downloads and release notes: <https://nightcoop.net/download.html>
+NightCoop is the work of its developers, and all credit for the mod belongs to them. I have nothing but respect
+for what they have built. This launcher only downloads the builds they publish on their own site, exactly as
+their [download page](https://nightcoop.net/download.html) offers them, and changes nothing about the mod.
 
 If you enjoy the mod, please support its developers through the links on their site. If you are part of the
 NightCoop team and would rather this launcher worked differently or did not exist, please open an issue.
@@ -25,27 +44,46 @@ to be one button, so all of us can simply play.
 
 The launcher was developed with the help of [Claude](https://claude.com/claude-code), Anthropic's AI assistant.
 
+## Get started
+
+1. Download `NightCoopLauncher.exe` from the [latest release](../../releases/latest).
+2. Run it. It is a single file and needs no installation and no .NET runtime.
+3. Press **Install**. Once the mod is current, the same button becomes **Play**.
+
+You need a licensed copy of Cyberpunk 2077 (Steam, GOG or Epic) in a version the current NightCoop build
+supports. Windows may warn about an unknown publisher because the file is not code-signed.
+
 ## What it does
 
-| Page | Contents |
+### Updates you can follow
+
+The launcher asks nightcoop.net for the latest build, picks the archive made for your game version and installs
+it in five visible steps. Every download is verified against the SHA-256 published by NightCoop before the game
+folder is touched, and if an installation fails halfway the previous mod files are put back.
+
+Release notes, optional automatic updates and a version history with rollback are on the same page.
+
+<p align="center">
+  <img src="docs/screenshots/updates.png" alt="The Updates page: a pending update with its five steps and the release notes" width="900">
+</p>
+
+### Backups of your saves
+
+Saves are backed up before every update, and before every game start if you switch that on. Any backup can be
+restored, exported or deleted. Restoring first backs up the saves being replaced, so it can be undone.
+
+<p align="center">
+  <img src="docs/screenshots/backups.png" alt="The Backups page: a list of save backups with restore, export and delete" width="900">
+</p>
+
+### And the rest
+
+| | |
 | --- | --- |
-| Play | Status at a glance and one button: install or update first, play once the mod is current |
-| Updates | The update in five steps with progress, release notes, optional automatic updates, version history with rollback |
-| Backups | Back up, restore, export and delete saves; automatic backups before updates and before game starts |
-| Settings | Language, game folder, backup location |
-
-- Finds the game in Steam, GOG and Epic and picks the archive built for your game version.
-- Verifies every download against the SHA-256 published by NightCoop before touching the game folder.
-- Puts the previous mod files back if an installation fails halfway.
-- Checks the installed files and repairs them on request.
-- Interface in English and German.
-
-## Install
-
-Download `NightCoopLauncher.exe` from the [latest release](../../releases/latest) and run it. It is a single file
-and needs no .NET runtime. Windows may warn about an unknown publisher because the file is not code-signed.
-
-You need a licensed copy of Cyberpunk 2077 in a version the current NightCoop build supports.
+| **Finds your game** | Detects Cyberpunk 2077 in Steam, GOG and Epic; any other folder can be chosen by hand |
+| **Checks the installation** | Compares the installed mod files with what was installed and repairs them on request |
+| **Shows the protocol number** | Everyone in a session needs the same one, so it is on the first page |
+| **Speaks two languages** | English and German, switchable in the settings; more can be [added](#add-a-language) |
 
 ## Build
 
@@ -92,8 +130,10 @@ back to English, and a test checks that all dictionaries carry the same keys.
 | Installed build | `NightCoop.updater.json` in the game folder |
 
 Backups made before game starts are limited to the number set on the Backups page. Manual backups and backups
-made before updates stay until you delete them. Restoring a backup first backs up the current saves, so it can
-be undone.
+made before updates stay until you delete them.
+
+Setting the environment variable `NIGHTCOOP_LAUNCHER_DATA` to a folder makes the launcher keep its settings and
+backups there instead.
 
 ## Credits
 
