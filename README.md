@@ -100,4 +100,10 @@ be undone.
 - [NightCoop](https://nightcoop.net) by its developers.
 - Fonts: Russo One and IBM Plex, both under the SIL Open Font License (see `src/NightCoopLauncher.App/Fonts`).
 
-Cyberpunk 2077 is a trademark of CD PROJEKT S.A.
+## License
+
+The launcher's code is released under the [MIT License](LICENSE).
+
+The license covers this launcher only. It does not cover the NightCoop mod, which is not part of this repository
+and remains the work of its developers, nor the bundled fonts, which keep their own license. It grants no rights
+to the names NightCoop or Cyberpunk 2077. Cyberpunk 2077 is a trademark of CD PROJEKT S.A.
