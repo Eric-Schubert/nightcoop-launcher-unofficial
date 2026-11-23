@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>NightCoopLauncher</AssemblyName>
+    <RootNamespace>NightCoopLauncher.App</RootNamespace>
+    <Product>NightCoop Launcher</Product>
+    <Description>Unofficial launcher and updater for the NightCoop mod.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NightCoopLauncher.Core\NightCoopLauncher.Core.csproj" />
+  </ItemGroup>
+
+</Project>
