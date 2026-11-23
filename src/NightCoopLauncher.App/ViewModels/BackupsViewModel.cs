@@ -171,7 +171,7 @@ public sealed class BackupsViewModel : PageViewModel
 
     protected override void RefreshProgress()
     {
-        ShowProgress = Controller.IsBusy && !Controller.IsUpdating && Controller.Progress.Fraction > 0;
+        ShowProgress = Controller.IsBusy && !Controller.IsUpdating && !Controller.IsUpdatingLauncher && Controller.Progress.Fraction > 0;
         ProgressPercent = Controller.Progress.Fraction * 100;
         ProgressText = T("backups.progress", ProgressPercent.ToString("0", Localizer.Culture));
     }

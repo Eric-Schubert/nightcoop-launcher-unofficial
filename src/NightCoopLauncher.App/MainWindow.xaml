@@ -107,16 +107,34 @@
           <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Border Background="{StaticResource DangerPanelBrush}" BorderBrush="{StaticResource DangerBrush}"
-                BorderThickness="0,0,0,1" Padding="40,13,24,13"
-                Visibility="{Binding HasError, Converter={StaticResource BoolToVisibility}}">
-          <DockPanel>
-            <Button DockPanel.Dock="Right" Style="{StaticResource TitleBarButton}" Width="32" Height="24"
-                    Content="&#xE8BB;" ToolTip="{l:T shell.error.dismiss}" Command="{Binding DismissErrorCommand}" />
-            <TextBlock Style="{StaticResource Icon}" Foreground="{StaticResource DangerBrush}" Text="&#xE7BA;" />
-            <TextBlock Margin="12,0,12,0" TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding ErrorText}" />
-          </DockPanel>
-        </Border>
+        <StackPanel>
+          <!-- A newer version of the launcher itself -->
+          <Border Background="{StaticResource AccentPanelBrush}" BorderBrush="{StaticResource AccentBrush}"
+                  BorderThickness="0,0,0,1" Padding="40,10,24,10"
+                  Visibility="{Binding HasLauncherUpdate, Converter={StaticResource BoolToVisibility}}">
+            <DockPanel>
+              <Button DockPanel.Dock="Right" Style="{StaticResource TitleBarButton}" Width="32" Height="24"
+                      Content="&#xE8BB;" ToolTip="{l:T shell.selfUpdate.dismiss}"
+                      Command="{Binding DismissLauncherUpdateCommand}" />
+              <Button DockPanel.Dock="Right" Style="{StaticResource SecondaryButton}" Margin="0,0,12,0" Padding="14,7"
+                      BorderBrush="{StaticResource AccentBrush}" Foreground="{StaticResource AccentBrush}"
+                      Content="{l:T shell.selfUpdate.button}" Command="{Binding UpdateLauncherCommand}" />
+              <TextBlock Style="{StaticResource Icon}" Foreground="{StaticResource AccentBrush}" Text="&#xE896;" />
+              <TextBlock Margin="12,0,12,0" TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding LauncherUpdateText}" />
+            </DockPanel>
+          </Border>
+
+          <Border Background="{StaticResource DangerPanelBrush}" BorderBrush="{StaticResource DangerBrush}"
+                  BorderThickness="0,0,0,1" Padding="40,13,24,13"
+                  Visibility="{Binding HasError, Converter={StaticResource BoolToVisibility}}">
+            <DockPanel>
+              <Button DockPanel.Dock="Right" Style="{StaticResource TitleBarButton}" Width="32" Height="24"
+                      Content="&#xE8BB;" ToolTip="{l:T shell.error.dismiss}" Command="{Binding DismissErrorCommand}" />
+              <TextBlock Style="{StaticResource Icon}" Foreground="{StaticResource DangerBrush}" Text="&#xE7BA;" />
+              <TextBlock Margin="12,0,12,0" TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding ErrorText}" />
+            </DockPanel>
+          </Border>
+        </StackPanel>
 
         <Grid Grid.Row="1" Visibility="{Binding IsPlayPage, Converter={StaticResource BoolToVisibility}}">
           <views:PlayPage DataContext="{Binding Play}" />

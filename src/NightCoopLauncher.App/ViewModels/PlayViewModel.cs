@@ -117,7 +117,7 @@ public sealed class PlayViewModel : PageViewModel
     protected override void RefreshProgress()
     {
         var progress = Controller.Progress;
-        ShowProgress = Controller.IsBusy && (Controller.IsUpdating || progress.Fraction > 0);
+        ShowProgress = Controller.IsBusy && !Controller.IsUpdatingLauncher && (Controller.IsUpdating || progress.Fraction > 0);
         ProgressPercent = progress.Fraction * 100;
         ProgressText = T("step." + progress.Step);
     }

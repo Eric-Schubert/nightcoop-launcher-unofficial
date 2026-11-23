@@ -88,6 +88,7 @@ restored, exported or deleted. Restoring first backs up the saves being replaced
 | **Checks the installation** | Compares the installed mod files with what was installed and repairs them on request |
 | **Shows the protocol number** | Everyone in a session needs the same one, so it is on the first page |
 | **Speaks two languages** | English and German, switchable in the settings; more can be [added](#add-a-language) |
+| **Updates itself** | Offers new launcher versions from this repository's releases and replaces itself with one click, after verifying the download's checksum |
 
 ## Build
 

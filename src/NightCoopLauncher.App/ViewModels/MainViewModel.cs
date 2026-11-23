@@ -19,6 +19,7 @@ public enum Page
 public sealed class MainViewModel : PageViewModel
 {
     private Page _currentPage = Page.Play;
+    private bool _launcherUpdateDismissed;
 
     public MainViewModel(LauncherController controller, Localizer localizer, IUserPrompts prompts)
         : base(controller, localizer)
@@ -32,6 +33,8 @@ public sealed class MainViewModel : PageViewModel
 
         JoinDiscordCommand = new RelayCommand(() => prompts.OpenInShell(DiscordClient.InviteUri.ToString()));
         DismissErrorCommand = new RelayCommand(controller.DismissError);
+        UpdateLauncherCommand = new RelayCommand(controller.UpdateLauncherAsync, () => IsIdle);
+        DismissLauncherUpdateCommand = new RelayCommand(DismissLauncherUpdate);
         controller.GameLaunched += (_, _) => GameLaunched?.Invoke(this, EventArgs.Empty);
     }
 
@@ -49,6 +52,10 @@ public sealed class MainViewModel : PageViewModel
     public ICommand JoinDiscordCommand { get; }
 
     public ICommand DismissErrorCommand { get; }
+
+    public ICommand UpdateLauncherCommand { get; }
+
+    public ICommand DismissLauncherUpdateCommand { get; }
 
     public Page CurrentPage
     {
@@ -87,6 +94,17 @@ public sealed class MainViewModel : PageViewModel
         ? Localizer.Format("error." + error.Error, [.. error.Arguments])
         : string.Empty;
 
+    public bool HasLauncherUpdate => Controller.LauncherUpdate is not null && !_launcherUpdateDismissed;
+
+    public bool IsUpdatingLauncher => Controller.IsUpdatingLauncher;
+
+    public string LauncherUpdateText => Controller switch
+    {
+        { IsUpdatingLauncher: true } => T("shell.selfUpdate.progress", (Controller.Progress.Fraction * 100).ToString("0", Localizer.Culture)),
+        { LauncherUpdate: { } release } => T("shell.selfUpdate.available", Formatting.Version(release.Version.ToString(3))),
+        _ => string.Empty,
+    };
+
     public string Footer
     {
         get
@@ -109,6 +127,22 @@ public sealed class MainViewModel : PageViewModel
         OnPropertyChanged(nameof(HasError));
         OnPropertyChanged(nameof(ErrorText));
         OnPropertyChanged(nameof(Footer));
+        RefreshProgress();
+        CommandManager.InvalidateRequerySuggested();
+    }
+
+    protected override void RefreshProgress()
+    {
+        OnPropertyChanged(nameof(HasLauncherUpdate));
+        OnPropertyChanged(nameof(IsUpdatingLauncher));
+        OnPropertyChanged(nameof(LauncherUpdateText));
+    }
+
+    // Hides the notice until the next start; the update stays available.
+    private void DismissLauncherUpdate()
+    {
+        _launcherUpdateDismissed = true;
+        RefreshProgress();
     }
 
     // A radio button reports both the page it leaves and the one it enters; only the latter counts.

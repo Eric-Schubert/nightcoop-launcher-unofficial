@@ -5,6 +5,7 @@ using NightCoopLauncher.Core.Game;
 using NightCoopLauncher.Core.Install;
 using NightCoopLauncher.Core.Releases;
 using NightCoopLauncher.Core.Saves;
+using NightCoopLauncher.Core.SelfUpdate;
 using NightCoopLauncher.Core.Settings;
 
 namespace NightCoopLauncher.App.Launcher;
@@ -32,6 +33,7 @@ public sealed class LauncherController(
     ModInstaller installer,
     SaveBackupService backups,
     DiscordClient discord,
+    LauncherSelfUpdate selfUpdate,
     SettingsStore settingsStore,
     Func<string> language)
 {
@@ -42,6 +44,9 @@ public sealed class LauncherController(
     public event EventHandler? ProgressChanged;
 
     public event EventHandler? GameLaunched;
+
+    /// <summary>Raised after the launcher replaced itself; carries the executable to start.</summary>
+    public event EventHandler<string>? RestartRequested;
 
     public LauncherSettings Settings { get; private set; } = settingsStore.Load();
 
@@ -65,6 +70,11 @@ public sealed class LauncherController(
 
     public DiscordServer? Discord { get; private set; }
 
+    /// <summary>A newer version of the launcher itself, if there is one.</summary>
+    public LauncherRelease? LauncherUpdate { get; private set; }
+
+    public bool IsUpdatingLauncher { get; private set; }
+
     public LauncherException? Error { get; private set; }
 
     public bool IsBusy { get; private set; }
@@ -87,6 +97,7 @@ public sealed class LauncherController(
         ApplyBackupDirectory();
 
         var discordTask = discord.FetchAsync(CancellationToken.None);
+        var launcherUpdateTask = selfUpdate.FindUpdateAsync(CancellationToken.None);
         await RunAsync(CheckAsync);
 
         if (ShouldAutoInstall())
@@ -95,6 +106,7 @@ public sealed class LauncherController(
         }
 
         Discord = await discordTask;
+        LauncherUpdate = await launcherUpdateTask;
         Changed?.Invoke(this, EventArgs.Empty);
     }
 
@@ -157,6 +169,25 @@ public sealed class LauncherController(
 
     public Task ExportBackupAsync(SaveBackup backup, string destinationPath) =>
         RunAsync(() => Task.Run(() => SaveBackupService.Export(backup, destinationPath)));
+
+    public Task UpdateLauncherAsync() => RunAsync(async () =>
+    {
+        if (LauncherUpdate is not { } release)
+        {
+            return;
+        }
+
+        IsUpdatingLauncher = true;
+        try
+        {
+            var executable = await selfUpdate.InstallAsync(release, ReportStep(UpdateStep.None), CancellationToken.None);
+            RestartRequested?.Invoke(this, executable);
+        }
+        finally
+        {
+            IsUpdatingLauncher = false;
+        }
+    });
 
     public Task SetGameFolderAsync(string path) => RunAsync(async () =>
     {

@@ -13,6 +13,7 @@ using NightCoopLauncher.Core.Game;
 using NightCoopLauncher.Core.Install;
 using NightCoopLauncher.Core.Releases;
 using NightCoopLauncher.Core.Saves;
+using NightCoopLauncher.Core.SelfUpdate;
 using NightCoopLauncher.Core.Settings;
 using Xunit;
 
@@ -49,6 +50,9 @@ public sealed class LauncherFlowTests : IDisposable
         Directory.CreateDirectory(SavesFolder);
         File.WriteAllText(Path.Combine(SavesFolder, "sav.dat"), "save");
 
+        Directory.CreateDirectory(Path.GetDirectoryName(LauncherExecutable)!);
+        File.WriteAllText(LauncherExecutable, "old launcher");
+
         var settingsStore = new SettingsStore(Path.Combine(_root, "settings.json"));
         settingsStore.Save(new LauncherSettings { GamePath = GameFolder, BackupDirectory = BackupFolder, Language = "en" });
 
@@ -62,6 +66,7 @@ public sealed class LauncherFlowTests : IDisposable
             new ModInstaller(http),
             new SaveBackupService(SavesFolder, BackupFolder, TimeProvider.System),
             new DiscordClient(http),
+            new LauncherSelfUpdate(new LauncherReleaseClient(http), new Version(1, 0, 0), LauncherExecutable),
             settingsStore,
             () => localizer.LanguageCode);
         _window = new MainViewModel(_controller, localizer, new SilentPrompts());
@@ -72,6 +77,8 @@ public sealed class LauncherFlowTests : IDisposable
     private string SavesFolder => Path.Combine(_root, "saves");
 
     private string BackupFolder => Path.Combine(_root, "backups");
+
+    private string LauncherExecutable => Path.Combine(_root, "launcher", LauncherReleaseClient.ExecutableName);
 
     public void Dispose()
     {
@@ -194,6 +201,34 @@ public sealed class LauncherFlowTests : IDisposable
     }
 
     [Fact]
+    public async Task Offers_a_newer_launcher_and_replaces_itself_on_request()
+    {
+        string? restartedInto = null;
+        _controller.RestartRequested += (_, executable) => restartedInto = executable;
+        await _window.InitializeAsync();
+
+        Assert.True(_window.HasLauncherUpdate);
+        Assert.Equal("A new version of the launcher is available: v1.1.0", _window.LauncherUpdateText);
+
+        await _controller.UpdateLauncherAsync();
+
+        Assert.Null(_controller.Error);
+        Assert.Equal(LauncherExecutable, restartedInto);
+        Assert.Equal(FakeSite.NewLauncher, File.ReadAllBytes(LauncherExecutable));
+        Assert.Equal("old launcher", File.ReadAllText(LauncherExecutable + ".old"));
+    }
+
+    [Fact]
+    public async Task Offers_no_launcher_update_when_the_running_one_is_current()
+    {
+        _site.LauncherTag = "v1.0.0";
+
+        await _window.InitializeAsync();
+
+        Assert.False(_window.HasLauncherUpdate);
+    }
+
+    [Fact]
     public async Task Shows_the_discord_server_when_it_can_be_reached()
     {
         await _window.InitializeAsync();
@@ -225,6 +260,21 @@ public sealed class LauncherFlowTests : IDisposable
 
         public bool IsOffline { get; set; }
 
+        public static byte[] NewLauncher { get; } = "new launcher"u8.ToArray();
+
+        public string LauncherTag { get; set; } = "v1.1.0";
+
+        private string LauncherRelease() => $$"""
+            {
+              "tag_name": "{{LauncherTag}}", "draft": false, "prerelease": false,
+              "assets": [ {
+                "name": "NightCoopLauncher.exe",
+                "browser_download_url": "https://github.com/dominique-boerner/nightcoop-launcher-unofficial/releases/download/{{LauncherTag}}/NightCoopLauncher.exe",
+                "digest": "sha256:{{Convert.ToHexString(SHA256.HashData(NewLauncher))}}"
+              } ]
+            }
+            """;
+
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             if (IsOffline)
@@ -236,6 +286,16 @@ public sealed class LauncherFlowTests : IDisposable
             if (request.RequestUri.Host == "discord.com")
             {
                 return Respond("""{ "approximate_presence_count": 15798, "guild": { "name": "NightCoop" } }"""u8.ToArray());
+            }
+
+            if (request.RequestUri.Host == "api.github.com")
+            {
+                return Respond(System.Text.Encoding.UTF8.GetBytes(LauncherRelease()));
+            }
+
+            if (request.RequestUri.Host == "github.com")
+            {
+                return Respond(NewLauncher);
             }
 
             if (path == "/releases.json")

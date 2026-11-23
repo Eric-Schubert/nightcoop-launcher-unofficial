@@ -8,6 +8,10 @@
   "shell.footer.launcher": "Launcher {0}",
   "shell.footer.mod": "Mod {0}",
   "shell.error.dismiss": "Schließen",
+  "shell.selfUpdate.available": "Eine neue Version des Launchers ist da: {0}",
+  "shell.selfUpdate.progress": "Launcher-Update wird heruntergeladen · {0} %",
+  "shell.selfUpdate.button": "AKTUALISIEREN UND NEU STARTEN",
+  "shell.selfUpdate.dismiss": "Später",
 
   "nav.play": "SPIELEN",
   "nav.updates": "UPDATES",
@@ -205,5 +209,6 @@
   "error.GameRunning": "Cyberpunk 2077 läuft. Schließe das Spiel und versuche es erneut.",
   "error.GameStartFailed": "Das Spiel konnte nicht gestartet werden: {0}",
   "error.NoSaves": "In „{0}“ liegen keine Spielstände.",
-  "error.BackupMissing": "Die Backup-Datei existiert nicht mehr."
+  "error.BackupMissing": "Die Backup-Datei existiert nicht mehr.",
+  "error.LauncherNotReplaceable": "Der Launcher konnte sich nicht selbst ersetzen (kein Schreibzugriff auf „{0}“). Lade die neue Version von der Release-Seite."
 }

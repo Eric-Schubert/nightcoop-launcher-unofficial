@@ -26,6 +26,7 @@ public enum LauncherError
     GameStartFailed,
     NoSaves,
     BackupMissing,
+    LauncherNotReplaceable,
 }
 
 /// <summary>
